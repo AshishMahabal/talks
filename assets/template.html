@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <base href="$baseurl$/talks/">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>$if(title)$$title$$else$$pagetitle$$endif$</title>
+  $for(css)$
+  <link rel="stylesheet" href="assets/style.css" />
+  $endfor$
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+    <nav class="nav">
+      <a href="$baseurl$/" class="nav-item">Home</a>
+    </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    $body$
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <span>© $date$</span>
+    </div>
+  </footer>
+</body>
+</html>
+
