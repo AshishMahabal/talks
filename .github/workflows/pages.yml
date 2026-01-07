@@ -1,0 +1,62 @@
+name: Build and deploy Talks (GitHub Pages)
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install pandoc
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y pandoc
+
+      # For a repo named "talks", GitHub Pages base is "/talks/"
+      # So BASEURL should be "/talks" and template should use <base href="$baseurl$/">
+      - name: Build talks
+        env:
+          BASEURL: "/${{ github.event.repository.name }}"
+        run: |
+          chmod +x build.sh
+          ./build.sh
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      # Deploy the *contents* of ./talks as the Pages root (no staging folder needed)
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: talks
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
