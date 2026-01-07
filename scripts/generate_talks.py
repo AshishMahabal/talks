@@ -141,6 +141,96 @@ class Talk:
     def time_key(self) -> str:
         return self.start_time or "99:99"
 
+def render_upcoming_cards_html(upcoming: List[Talk]) -> str:
+    # Only dated items for ordering
+    items = [t for t in upcoming if t.talk_date is not None]
+    if not items:
+        return "<p><em>No upcoming talks listed.</em></p>"
+
+    # Group by (year, month)
+    by_ym: Dict[Tuple[int, int], List[Talk]] = {}
+    for t in items:
+        key = (t.talk_date.year, t.talk_date.month)
+        by_ym.setdefault(key, []).append(t)
+
+    parts: List[str] = []
+    parts.append('<div class="board">')
+
+    for (y, m) in sorted(by_ym.keys()):
+        month_name = f"{datetime(y, m, 1).strftime('%B %Y')}"
+        parts.append('<div class="board-section">')
+        parts.append(f'<div class="board-section-title">{month_name}</div>')
+        parts.append('<div class="card-grid">')
+
+        for t in sorted(by_ym[(y, m)], key=lambda x: (x.talk_date_key, x.time_key, x.meeting, x.title)):
+            # Link from /talks/ index -> /talks/<id>/
+            href = f"{t.talk_id}/"
+            title = t.title or t.talk_id
+
+            # Topline: date + time + tz
+            date_str = t.talk_date.isoformat() if t.talk_date else ""
+            time_str = ""
+            if t.start_time:
+                time_str = t.start_time + (f" {t.time_zone}" if t.time_zone else "")
+
+            where = ", ".join([p for p in [t.city, t.country] if p])
+
+            meeting_html = _md_link(t.meeting, t.meeting_link) if t.meeting_link else t.meeting
+
+            parts.append('<div class="talk-card">')
+            parts.append('<div class="talk-topline">')
+            if date_str:
+                parts.append(f"<span>{date_str}</span>")
+            if time_str:
+                parts.append(f"<span>{time_str}</span>")
+            if t.duration_min:
+                parts.append(f"<span>{t.duration_min} min</span>")
+            if t.status_norm:
+                parts.append(f'<span class="badge">{t.status_norm}</span>')
+            if t.talk_type:
+                parts.append(f'<span class="badge">{t.talk_type}</span>')
+            parts.append("</div>")
+
+            parts.append(f'<div class="talk-title"><a href="{href}">{title}</a></div>')
+
+            if meeting_html:
+                # meeting_html is markdown link; but we are emitting HTML here.
+                # Render meeting link manually to avoid markdown-in-html issues.
+                if t.meeting_link:
+                    parts.append(f'<div class="talk-sub"><a href="{t.meeting_link}">{t.meeting}</a></div>')
+                else:
+                    parts.append(f'<div class="talk-sub">{t.meeting}</div>')
+
+            if where:
+                parts.append(f'<div class="talk-sub">{where}</div>')
+
+            if t.session:
+                parts.append(f'<div class="talk-sub"><strong>Session:</strong> {t.session}</div>')
+
+            # Tags chips
+            if t.tags:
+                parts.append('<div class="chips">')
+                for tag in t.tags:
+                    parts.append(f'<a class="chip" href="tags/{tag}/">{tag}</a>')
+                parts.append("</div>")
+
+            # Links row
+            links = []
+            if t.slides:
+                links.append(f'<a href="{t.slides}">Slides</a>')
+            if t.recording:
+                links.append(f'<a href="{t.recording}">Recording</a>')
+            if links:
+                parts.append('<div class="linkrow">' + " ".join(links) + "</div>")
+
+            parts.append("</div>")  # talk-card
+
+        parts.append("</div>")  # card-grid
+        parts.append("</div>")  # board-section
+
+    parts.append("</div>")  # board
+    return "\n".join(parts)
+
 def render_upcoming_calendar_html(upcoming: List[Talk]) -> str:
     """
     Returns raw HTML for one or more month grids covering all upcoming talk dates.
@@ -449,7 +539,8 @@ def write_indices(out_dir: Path, talks: List[Talk]) -> None:
     if upcoming:
         blocks.append("## Upcoming\n")
         # Calendar-like HTML (pandoc will pass through raw HTML)
-        blocks.append(render_upcoming_calendar_html(upcoming))
+        blocks.append(render_upcoming_cards_html(upcoming))
+#        blocks.append(render_upcoming_calendar_html(upcoming))
 #        blocks.extend([list_item_md(t) for t in upcoming])
     else:
         blocks.append("_No upcoming talks listed._")

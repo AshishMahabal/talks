@@ -301,3 +301,108 @@ a code {
   margin-top: 0.15rem;
 }
 
+/* =========================
+   Cards + chips board view
+   ========================= */
+
+.board {
+  margin: 1rem 0 2rem;
+}
+
+.board-section {
+  margin: 1.5rem 0;
+}
+
+.board-section-title {
+  font-weight: 700;
+  margin: 0 0 0.75rem 0;
+  font-size: 1.1rem;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 0.9rem;
+}
+
+.talk-card {
+  grid-column: span 6; /* 2 per row on desktop */
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: #fff;
+  padding: 0.9rem 1rem;
+  box-shadow: 0 1px 0 rgba(0,0,0,0.02);
+}
+
+@media (max-width: 900px) {
+  .talk-card { grid-column: span 12; } /* 1 per row on small screens */
+}
+
+.talk-topline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 0.6rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin-bottom: 0.35rem;
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.12rem 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--text);
+  font-size: 0.8rem;
+}
+
+.talk-title {
+  margin: 0.2rem 0 0.4rem 0;
+  font-size: 1.05rem;
+  line-height: 1.35;
+}
+
+.talk-title a {
+  text-decoration: none;
+}
+
+.talk-title a:hover {
+  text-decoration: underline;
+}
+
+.talk-sub {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin: 0.2rem 0;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 0.6rem;
+}
+
+.chip {
+  display: inline-block;
+  padding: 0.18rem 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: #fafafa;
+  font-size: 0.82rem;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.chip:hover {
+  background: var(--accent);
+}
+
+.linkrow {
+  margin-top: 0.65rem;
+  display: flex;
+  gap: 0.9rem;
+  font-size: 0.9rem;
+}
+
