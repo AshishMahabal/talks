@@ -7,6 +7,9 @@ from dataclasses import dataclass
 from datetime import date, datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
+import calendar
+from collections import defaultdict
+
 
 
 AUTO_START = "<!-- AUTO-GENERATED START -->"
@@ -138,6 +141,79 @@ class Talk:
     def time_key(self) -> str:
         return self.start_time or "99:99"
 
+def render_upcoming_calendar_html(upcoming: List[Talk]) -> str:
+    """
+    Returns raw HTML for one or more month grids covering all upcoming talk dates.
+    Expects Talk Date to be present for calendar placement.
+    """
+    # Keep only talks with dates
+    upcoming = [t for t in upcoming if t.talk_date is not None]
+    if not upcoming:
+        return "<p><em>No upcoming talks listed.</em></p>"
+
+    # Group talks by (year, month, day)
+    by_ymd: Dict[Tuple[int, int, int], List[Talk]] = defaultdict(list)
+    for t in upcoming:
+        d = t.talk_date
+        by_ymd[(d.year, d.month, d.day)].append(t)
+
+    # Determine which months to render (all months present in upcoming)
+    months = sorted({(t.talk_date.year, t.talk_date.month) for t in upcoming})
+
+    # Calendar where weeks start on Sunday (6 for Sunday in Python? actually setfirstweekday expects 6 for Sunday)
+    cal = calendar.Calendar(firstweekday=6)  # Sunday
+
+    dow_labels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+
+    parts: List[str] = []
+    parts.append('<div class="calendar">')
+
+    for (y, m) in months:
+        month_name = f"{calendar.month_name[m]} {y}"
+        parts.append('<div class="calendar-month">')
+        parts.append(f'<div class="calendar-month-header">{month_name}</div>')
+        parts.append('<div class="calendar-grid">')
+
+        # day-of-week headers
+        for lab in dow_labels:
+            parts.append(f'<div class="calendar-dow">{lab}</div>')
+
+        # weeks
+        for week in cal.monthdayscalendar(y, m):
+            for day in week:
+                if day == 0:
+                    parts.append('<div class="calendar-cell is-empty"></div>')
+                    continue
+
+                items = by_ymd.get((y, m, day), [])
+                parts.append('<div class="calendar-cell">')
+                parts.append(f'<div class="calendar-daynum">{day}</div>')
+
+                for t in sorted(items, key=lambda x: x.time_key):
+                    # Link from /talks/ index to /talks/<id>/ : relative "talks/<id>/" from base
+                    href = f"{t.talk_id}/"
+                    title = t.title or t.talk_id
+
+                    meta_bits = []
+                    if t.start_time:
+                        meta_bits.append(t.start_time + (f" {t.time_zone}" if t.time_zone else ""))
+                    if t.city or t.country:
+                        meta_bits.append(", ".join([p for p in [t.city, t.country] if p]))
+                    meta = " • ".join(meta_bits)
+
+                    parts.append(f'<a class="calendar-item" href="{href}">')
+                    parts.append(f'<span class="calendar-chip">{title}</span>')
+                    if meta:
+                        parts.append(f'<span class="calendar-meta">{meta}</span>')
+                    parts.append("</a>")
+
+                parts.append("</div>")  # calendar-cell
+
+        parts.append("</div>")  # calendar-grid
+        parts.append("</div>")  # calendar-month
+
+    parts.append("</div>")  # calendar
+    return "\n".join(parts)
 
 def load_talks(csv_path: Path) -> List[Talk]:
     _, rows = _read_csv(csv_path)
@@ -370,9 +446,11 @@ def write_indices(out_dir: Path, talks: List[Talk]) -> None:
     blocks: List[str] = []
     blocks.append("# Talks\n")
 
-    blocks.append("## Upcoming\n")
     if upcoming:
-        blocks.extend([list_item_md(t) for t in upcoming])
+        blocks.append("## Upcoming\n")
+        # Calendar-like HTML (pandoc will pass through raw HTML)
+        blocks.append(render_upcoming_calendar_html(upcoming))
+#        blocks.extend([list_item_md(t) for t in upcoming])
     else:
         blocks.append("_No upcoming talks listed._")
 
