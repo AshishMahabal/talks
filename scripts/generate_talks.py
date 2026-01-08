@@ -378,7 +378,7 @@ def read_existing_notes(md_path: Path) -> str:
     if not md_path.exists():
         return (
             f"{NOTES_START}\n"
-            f"(Add your notes here. This block will be preserved when regenerating.)\n"
+            f"(2026 talks.)\n"
             f"{NOTES_END}\n"
         )
     txt = md_path.read_text(encoding="utf-8")
