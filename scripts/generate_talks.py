@@ -836,7 +836,7 @@ def write_indices(out_dir: Path, talks: List[Talk]) -> None:
     for tag in sorted(tag_map.keys()):
         count = len(tag_map[tag])
         size = 0.85 + 0.65 * (count / max_tag_count)
-        tag_chips.append(f'<a class="chip cloud-chip" href="{tag}/" style="font-size:{size:.2f}rem">{tag} <small>({count})</small></a>')
+        tag_chips.append(f'<a class="chip cloud-chip" href="tags/{tag}/" style="font-size:{size:.2f}rem">{tag} <small>({count})</small></a>')
     tags_index_lines.append('<div class="chip-cloud">' + "\n".join(tag_chips) + '</div>')
     tags_index_path = out_dir / "tags" / "index.md"
     write_md_with_preserved_notes(
@@ -875,7 +875,7 @@ def write_indices(out_dir: Path, talks: List[Talk]) -> None:
         label = k.replace("-", " ").title()
         count = len(type_map[k])
         size = 0.85 + 0.65 * (count / max_type_count)
-        type_chips.append(f'<a class="chip cloud-chip" href="{k}/" style="font-size:{size:.2f}rem">{label} <small>({count})</small></a>')
+        type_chips.append(f'<a class="chip cloud-chip" href="types/{k}/" style="font-size:{size:.2f}rem">{label} <small>({count})</small></a>')
     types_index_lines.append('<div class="chip-cloud">' + "\n".join(type_chips) + '</div>')
     types_index_path = out_dir / "types" / "index.md"
     write_md_with_preserved_notes(
