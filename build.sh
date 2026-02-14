@@ -3,7 +3,7 @@ set -euo pipefail
 
 # For repo "talks" on GitHub Pages project site, BASEURL should be "/talks".
 # For a user site repo (<user>.github.io), BASEURL should be "".
-BASEURL="${BASEURL:-}"
+BASEURL="${BASEURL:-/talks}"
 
 python3 scripts/generate_talks.py
 

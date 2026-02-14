@@ -489,7 +489,7 @@ def talk_auto_block(t: Talk) -> str:
     lines: List[str] = []
 
     # Back link
-    lines.append('[&larr; All talks](../../)\n')
+    lines.append('[&larr; All talks](./)\n')
 
     # Metadata table as HTML for clean layout
     lines.append('<div class="talk-detail">')
@@ -544,7 +544,7 @@ def talk_auto_block(t: Talk) -> str:
 
     # Tags
     if t.tags:
-        tag_chips = " ".join([f'<a class="chip" href="../../tags/{tag}/">{tag}</a>' for tag in t.tags])
+        tag_chips = " ".join([f'<a class="chip" href="tags/{tag}/">{tag}</a>' for tag in t.tags])
         lines.append(f'<div class="talk-detail-row"><strong>Tags:</strong> {tag_chips}</div>')
 
     # Slides/Recording as buttons
@@ -585,14 +585,14 @@ def list_item_md(t: Talk) -> str:
 
     meta = " • ".join(bits)
     title = t.title or t.talk_id
-    line = f"- **[{title}](../{t.talk_id}/)**"
+    line = f"- **[{title}]({t.talk_id}/)**"
     if meta:
         line += f"  \n  {meta}"
     if t.meeting:
         meeting = _md_link(t.meeting, t.meeting_link) if t.meeting_link else t.meeting
         line += f"  \n  {meeting}"
     if t.tags:
-        tag_links = " ".join([f"[`{tag}`](../tags/{tag}/)" for tag in t.tags])
+        tag_links = " ".join([f"[`{tag}`](tags/{tag}/)" for tag in t.tags])
         line += f"  \n  {tag_links}"
     return line
 
