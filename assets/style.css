@@ -3,14 +3,41 @@
    ========================= */
 
 :root {
-  --text: #222;
-  --muted: #666;
-  --bg: #ffffff;
-  --link: #0645ad;
-  --link-hover: #0b0080;
-  --border: #ddd;
-  --accent: #f5f5f5;
-  --code-bg: #f8f8f8;
+  --text: #1a1a2e;
+  --muted: #5a6270;
+  --bg: #fafbfd;
+  --link: #3b7dd8;
+  --link-hover: #2a5ca8;
+  --border: #e0e4ea;
+  --accent: #f0f3f8;
+  --code-bg: #f0f3f8;
+  --card-bg: #ffffff;
+  --header-from: #2c3e6b;
+  --header-to: #4a6fa5;
+  --badge-scheduled: #2e7d32;
+  --badge-completed: #1565c0;
+  --badge-cancelled: #c62828;
+  --badge-tentative: #e65100;
+  --chip-bg: #e8edf5;
+  --chip-hover: #d0d8ea;
+  --dot-fill: #3b7dd8;
+  --dot-glow: #6ca0dc;
+  --map-bg: #eef2f7;
+  --map-land: #c8d5e0;
+  --map-border: #a0b0c0;
+  --map-grid: #dde3ea;
+  --stats-from: #eef2f9;
+  --stats-to: #f5f0fa;
+  --detail-from: #f5f7fb;
+  --detail-to: #f0f0f8;
+  --btn-from: #3b7dd8;
+  --btn-to: #5a95e0;
+  --cloud-to: #e0e6f2;
+  --cloud-border: #c8d0e0;
+  --chip-hover-border: #b0bbd0;
+  --heading-color: #2c3e6b;
+  --notes-bg: #fffbe6;
+  --notes-border: #e0dca3;
 }
 
 * {
@@ -36,14 +63,19 @@ body {
    ========================= */
 
 .container {
-  max-width: 900px;
+  max-width: 920px;
   margin: 0 auto;
   padding: 1.5rem 1.25rem;
 }
 
 .site-header {
-  border-bottom: 1px solid var(--border);
-  background: var(--accent);
+  background: linear-gradient(135deg, var(--header-from), var(--header-to));
+  color: #fff;
+  border-bottom: none;
+}
+
+.site-header .container {
+  padding: 1rem 1.25rem;
 }
 
 .site-footer {
@@ -61,16 +93,34 @@ body {
 .nav {
   display: flex;
   gap: 1.25rem;
+  flex-wrap: wrap;
 }
 
 .nav-item {
   text-decoration: none;
-  color: var(--link);
+  color: rgba(255,255,255,0.85);
   font-weight: 500;
+  padding: 0.2rem 0;
+  border-bottom: 2px solid transparent;
+  transition: color 0.15s, border-color 0.15s;
 }
 
 .nav-item:hover {
-  text-decoration: underline;
+  color: #fff;
+  border-bottom-color: rgba(255,255,255,0.6);
+  text-decoration: none;
+}
+
+/* =========================
+   Site title in header
+   ========================= */
+
+.site-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 0.35rem;
+  color: #fff;
+  letter-spacing: 0.02em;
 }
 
 /* =========================
@@ -85,12 +135,14 @@ h1, h2, h3, h4 {
 h1 {
   font-size: 2rem;
   margin-top: 0;
+  color: var(--header-from);
 }
 
 h2 {
   font-size: 1.5rem;
-  border-bottom: 1px solid var(--border);
-  padding-bottom: 0.25rem;
+  border-bottom: 2px solid var(--border);
+  padding-bottom: 0.3rem;
+  color: var(--heading-color);
 }
 
 h3 {
@@ -124,6 +176,7 @@ li > p {
 
 a {
   color: var(--link);
+  transition: color 0.15s;
 }
 
 a:hover {
@@ -138,8 +191,9 @@ blockquote {
   margin: 1rem 0;
   padding: 0.5rem 1rem;
   background: var(--accent);
-  border-left: 4px solid var(--border);
+  border-left: 4px solid var(--link);
   color: var(--muted);
+  border-radius: 0 6px 6px 0;
 }
 
 /* =========================
@@ -169,7 +223,7 @@ details {
   padding: 0.5rem 0.75rem;
   background: var(--accent);
   border: 1px solid var(--border);
-  border-radius: 4px;
+  border-radius: 6px;
 }
 
 summary {
@@ -178,11 +232,11 @@ summary {
 }
 
 /* =========================
-   Tag chips (inline)
+   Tag chips (inline in markdown)
    ========================= */
 
 a code {
-  background: var(--accent);
+  background: var(--chip-bg);
   border: 1px solid var(--border);
 }
 
@@ -191,29 +245,297 @@ a code {
    ========================= */
 
 .notes {
-  background: #fffbe6;
-  border: 1px dashed #e0dca3;
+  background: var(--notes-bg);
+  border: 1px dashed var(--notes-border);
   padding: 0.75rem 1rem;
   margin: 1.5rem 0;
   font-size: 0.95rem;
+  border-radius: 6px;
 }
 
 /* =========================
-   Small screens
+   Stats bar
    ========================= */
 
-@media (max-width: 600px) {
-  .container {
-    padding: 1rem 0.75rem;
-  }
+.stats-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  padding: 0.7rem 1.1rem;
+  background: linear-gradient(135deg, var(--stats-from), var(--stats-to));
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font-size: 0.92rem;
+  color: var(--muted);
+  margin-bottom: 1.2rem;
+}
 
-  h1 {
-    font-size: 1.75rem;
-  }
+.stats-bar strong {
+  color: var(--header-from);
+  font-size: 1.15em;
+}
 
-  h2 {
-    font-size: 1.35rem;
-  }
+/* =========================
+   Cards + chips board view
+   ========================= */
+
+.board {
+  margin: 1rem 0 2rem;
+}
+
+.board-section {
+  margin: 1.5rem 0;
+}
+
+.board-section-title {
+  font-weight: 700;
+  margin: 0 0 0.75rem 0;
+  font-size: 1.1rem;
+  color: var(--header-from);
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 0.9rem;
+}
+
+.talk-card {
+  grid-column: span 6; /* 2 per row on desktop */
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--link);
+  border-radius: 12px;
+  background: var(--card-bg);
+  padding: 1rem 1.1rem;
+  box-shadow: 0 2px 8px rgba(44,62,107,0.06);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.talk-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(44,62,107,0.12);
+}
+
+@media (max-width: 900px) {
+  .talk-card { grid-column: span 12; } /* 1 per row on small screens */
+}
+
+.talk-topline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 0.6rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin-bottom: 0.35rem;
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: #fff;
+  background: var(--badge-completed);
+  border: none;
+}
+
+.badge-scheduled,
+.talk-topline .badge:first-child {
+  /* Default status coloring handled below */
+}
+
+/* Status-specific badge colors via content matching (applied in Python) */
+
+.talk-title {
+  margin: 0.2rem 0 0.4rem 0;
+  font-size: 1.05rem;
+  line-height: 1.35;
+  font-weight: 600;
+}
+
+.talk-title a {
+  text-decoration: none;
+  color: var(--text);
+}
+
+.talk-title a:hover {
+  color: var(--link);
+  text-decoration: underline;
+}
+
+.talk-sub {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin: 0.2rem 0;
+}
+
+.talk-sub a {
+  color: var(--link);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 0.6rem;
+}
+
+.chip {
+  display: inline-block;
+  padding: 0.2rem 0.55rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--chip-bg);
+  font-size: 0.82rem;
+  color: var(--text);
+  text-decoration: none;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.chip:hover {
+  background: var(--chip-hover);
+  border-color: var(--chip-hover-border);
+  color: var(--text);
+}
+
+.linkrow {
+  margin-top: 0.65rem;
+  display: flex;
+  gap: 0.9rem;
+  font-size: 0.9rem;
+}
+
+/* =========================
+   Talk detail page
+   ========================= */
+
+.talk-detail {
+  margin: 1rem 0 1.5rem;
+  padding: 1.1rem 1.3rem;
+  background: linear-gradient(135deg, var(--detail-from), var(--detail-to));
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.talk-detail-badges {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.7rem;
+}
+
+.talk-detail-row {
+  margin: 0.4rem 0;
+  font-size: 0.95rem;
+}
+
+.talk-detail-row strong {
+  color: var(--header-from);
+}
+
+.talk-detail-links {
+  margin-top: 0.85rem;
+  display: flex;
+  gap: 0.6rem;
+}
+
+.btn {
+  display: inline-block;
+  padding: 0.45rem 1.1rem;
+  background: linear-gradient(135deg, var(--btn-from), var(--btn-to));
+  color: #fff;
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+  box-shadow: 0 2px 6px rgba(59,125,216,0.25);
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(59,125,216,0.35);
+  color: #fff;
+}
+
+/* =========================
+   Chip cloud (tags/types index)
+   ========================= */
+
+.chip-cloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  align-items: center;
+  margin: 1rem 0;
+}
+
+.cloud-chip {
+  padding: 0.35rem 0.8rem;
+  background: linear-gradient(135deg, var(--chip-bg), var(--cloud-to));
+  border-color: var(--cloud-border);
+  transition: transform 0.1s, background 0.15s;
+}
+
+.cloud-chip:hover {
+  transform: scale(1.06);
+  background: var(--chip-hover);
+}
+
+.cloud-chip small {
+  color: var(--muted);
+  font-size: 0.8em;
+}
+
+/* =========================
+   Card abstract (collapsible)
+   ========================= */
+
+.card-abstract {
+  margin-top: 0.5rem;
+  padding: 0.4rem 0.6rem;
+  font-size: 0.88rem;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+
+.card-abstract p {
+  margin: 0.3rem 0 0;
+  color: var(--muted);
+}
+
+/* =========================
+   World map
+   ========================= */
+
+.world-map {
+  margin: 1rem 0 1.5rem;
+  max-width: 100%;
+}
+
+.world-map svg {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+}
+
+.map-dot .map-label {
+  opacity: 0;
+  transition: opacity 0.2s;
+  pointer-events: none;
+  paint-order: stroke;
+  stroke: var(--map-bg);
+  stroke-width: 3px;
+}
+
+.map-dot:hover .map-label {
+  opacity: 1;
+}
+
+.map-dot:hover circle {
+  filter: brightness(1.3);
 }
 
 /* =========================
@@ -227,13 +549,14 @@ a code {
 .calendar-month {
   margin: 1.5rem 0;
   border: 1px solid var(--border);
-  border-radius: 6px;
+  border-radius: 8px;
   overflow: hidden;
 }
 
 .calendar-month-header {
   padding: 0.75rem 1rem;
-  background: var(--accent);
+  background: linear-gradient(135deg, var(--header-from), var(--header-to));
+  color: #fff;
   border-bottom: 1px solid var(--border);
   font-weight: 600;
 }
@@ -247,7 +570,7 @@ a code {
   padding: 0.5rem 0.5rem;
   font-size: 0.85rem;
   color: var(--muted);
-  background: #fafafa;
+  background: var(--accent);
   border-bottom: 1px solid var(--border);
   text-align: center;
 }
@@ -270,7 +593,7 @@ a code {
 }
 
 .calendar-cell.is-empty {
-  background: #fcfcfc;
+  background: var(--bg);
 }
 
 .calendar-item {
@@ -285,7 +608,7 @@ a code {
   padding: 0.25rem 0.45rem;
   border: 1px solid var(--border);
   border-radius: 999px;
-  background: var(--accent);
+  background: var(--chip-bg);
   color: var(--text);
   font-size: 0.85rem;
   line-height: 1.2;
@@ -302,107 +625,100 @@ a code {
 }
 
 /* =========================
-   Cards + chips board view
+   Dark mode
    ========================= */
 
-.board {
-  margin: 1rem 0 2rem;
+@media (prefers-color-scheme: dark) {
+  :root {
+    --text: #e0e4ea;
+    --muted: #8a92a0;
+    --bg: #12141e;
+    --link: #6ca0dc;
+    --link-hover: #8cb8e8;
+    --border: #2a2e3a;
+    --accent: #1a1e2e;
+    --code-bg: #1e2230;
+    --card-bg: #1a1e2e;
+    --header-from: #1e2a4a;
+    --header-to: #2a4070;
+    --chip-bg: #1e2a3e;
+    --chip-hover: #283850;
+    --chip-hover-border: #3a4a60;
+    --dot-fill: #6ca0dc;
+    --dot-glow: #4a80c0;
+    --map-bg: #151824;
+    --map-land: #252a3a;
+    --map-border: #3a4050;
+    --map-grid: #1e2230;
+    --stats-from: #1a1e2e;
+    --stats-to: #1e2238;
+    --detail-from: #1a1e2e;
+    --detail-to: #1e2238;
+    --btn-from: #4a80c0;
+    --btn-to: #6ca0dc;
+    --cloud-to: #222e42;
+    --cloud-border: #2a3a50;
+    --heading-color: #8cb8e8;
+    --notes-bg: #1e1e14;
+    --notes-border: #3a3a20;
+    --badge-scheduled: #388e3c;
+    --badge-completed: #1e88e5;
+    --badge-cancelled: #e53935;
+    --badge-tentative: #f57c00;
+  }
+
+  .badge {
+    opacity: 0.9;
+  }
+
+  .talk-card:hover {
+    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+  }
+
+  .btn {
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  }
 }
 
-.board-section {
-  margin: 1.5rem 0;
-}
+/* =========================
+   Small screens
+   ========================= */
 
-.board-section-title {
-  font-weight: 700;
-  margin: 0 0 0.75rem 0;
-  font-size: 1.1rem;
-}
+@media (max-width: 600px) {
+  .container {
+    padding: 1rem 0.75rem;
+  }
 
-.card-grid {
-  display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
-  gap: 0.9rem;
-}
+  h1 {
+    font-size: 1.75rem;
+  }
 
-.talk-card {
-  grid-column: span 6; /* 2 per row on desktop */
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  background: #fff;
-  padding: 0.9rem 1rem;
-  box-shadow: 0 1px 0 rgba(0,0,0,0.02);
-}
+  h2 {
+    font-size: 1.35rem;
+  }
 
-@media (max-width: 900px) {
-  .talk-card { grid-column: span 12; } /* 1 per row on small screens */
-}
+  .nav {
+    gap: 0.75rem;
+  }
 
-.talk-topline {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem 0.6rem;
-  color: var(--muted);
-  font-size: 0.9rem;
-  margin-bottom: 0.35rem;
-}
+  .stats-bar {
+    gap: 1rem;
+    font-size: 0.85rem;
+  }
 
-.badge {
-  display: inline-block;
-  padding: 0.12rem 0.5rem;
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  background: var(--accent);
-  color: var(--text);
-  font-size: 0.8rem;
-}
+  .chip-cloud {
+    gap: 0.4rem;
+  }
 
-.talk-title {
-  margin: 0.2rem 0 0.4rem 0;
-  font-size: 1.05rem;
-  line-height: 1.35;
-}
+  .talk-detail {
+    padding: 0.75rem 1rem;
+  }
 
-.talk-title a {
-  text-decoration: none;
-}
+  .talk-detail-links {
+    flex-wrap: wrap;
+  }
 
-.talk-title a:hover {
-  text-decoration: underline;
+  .card-grid {
+    gap: 0.6rem;
+  }
 }
-
-.talk-sub {
-  color: var(--muted);
-  font-size: 0.92rem;
-  margin: 0.2rem 0;
-}
-
-.chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.35rem;
-  margin-top: 0.6rem;
-}
-
-.chip {
-  display: inline-block;
-  padding: 0.18rem 0.5rem;
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  background: #fafafa;
-  font-size: 0.82rem;
-  color: var(--text);
-  text-decoration: none;
-}
-
-.chip:hover {
-  background: var(--accent);
-}
-
-.linkrow {
-  margin-top: 0.65rem;
-  display: flex;
-  gap: 0.9rem;
-  font-size: 0.9rem;
-}
-
